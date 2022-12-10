@@ -19,13 +19,13 @@ def analyser_commande():
 
     parser = argparse.ArgumentParser(description="Jeu Quoridor - phase 3")
 
-    parser.add_argument('idul', type=str, help='IDUL du joueur')
-    parser.add_argument("-a", "--automatique", help='Activer le mode automatique.', action='store_false', default=False)
-    parser.add_argument('-x', "--graphique", help="Activer le mode graphique.", action='store_false', default=False)
+    parser.add_argument('idul', help='IDUL du joueur')
+    parser.add_argument("-a", "--automatique", help='Activer le mode automatique.', action='store_true', default=False)
+    parser.add_argument('-x', "--graphique", help="Activer le mode graphique.", action='store_true', default=False)
 
     return parser.parse_args()
 
-
+#TODO is this function necessary for this project??
 def formater_les_parties(parties):
     """Formater une liste de parties
     L'ordre rester exactement la même que ce qui est passé en paramètre.
