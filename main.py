@@ -4,27 +4,45 @@ Ce programme permet de joueur au jeu Quoridor.
 """
 # from api import débuter_partie, jouer_coup, lister_parties
 from quoridor import Quoridor
-# from utilitaire import analyser_commande, formater_les_parties
+from utilitaire import analyser_commande, formater_les_parties
 
 # Mettre ici votre secret récupéré depuis le site de PAX
 SECRET = "523d4f1b-6ca7-4879-9d15-40ff4fcbfb3b"
 
 if __name__ == "__main__":
-    joueurs = ["Player", "Robot"]
-    game = Quoridor(joueurs)
+    args = analyser_commande()
 
-    while not game.est_terminée():
-        print(game)
-        choice, pos = game.récupérer_le_coup(1)
-        if choice == "D":
-            game.déplacer_jeton(1, pos)
-        else:
-            game.placer_un_mur(1, pos, choice)
-        if not game.est_terminée():
-            game.jouer_le_coup(2)
+    if args.automatique and args.graphique:
+        #Play auto against server with GUI
+        print("TESTING AUTOMATIC")
 
-    print(game)
-    print(f"Congrats to {game.est_terminée()} for your incredible victory")
+    elif args.graphique:
+        #Play manually against the server with GUI
+        print("GRAPHIC TEST")
+
+    elif args.automatique:
+        #Play automatically against the server without the GUI
+        pass
+
+    else:
+        #play manually against the server without GUI
+        pass
+
+    # joueurs = ["Player", "Robot"]
+    # game = Quoridor(joueurs)
+
+    # while not game.est_terminée():
+    #     print(game)
+    #     choice, pos = game.récupérer_le_coup(1)
+    #     if choice == "D":
+    #         game.déplacer_jeton(1, pos)
+    #     else:
+    #         game.placer_un_mur(1, pos, choice)
+    #     if not game.est_terminée():
+    #         game.jouer_le_coup(2)
+
+    # print(game)
+    # print(f"Congrats to {game.est_terminée()} for your incredible victory")
 
 
     # args = analyser_commande()
