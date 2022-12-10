@@ -1,0 +1,17 @@
+# Ignorer l'entièreté des fichiers/dossiers
+/**/playground.py*
+/**/tests.py*
+/**/quoridor.bundle*
+
+# Ne pas ignorer les fichiers suivant
+!/.gitignore
+!/api.py
+!/graphe.py
+!/main.py
+!/quoridor.py
+!/quoridor_error.py
+!/README.md
+!/tests.py
+!/utilitaire.py
+
+# Pas besoin d'inclure les bundles créés, ils devraient être ignorés automatiquement
