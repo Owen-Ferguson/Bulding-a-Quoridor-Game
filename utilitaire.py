@@ -17,12 +17,12 @@ def analyser_commande():
                     et « local » qui est un booléen `True`/`False`.
     """
 
-    parser = argparse.ArgumentParser(description="Quoridor")
+    parser = argparse.ArgumentParser(description="Jeu Quoridor - phase 3")
 
-    parser.add_argument('--idul', type=str, help='IDUL du joueur')
-    parser.add_argument('--local-arg', action="store_true", default=False)
-    parser.add_argument("-p", "--parties", help="List the existing parts",
-                    action="store_true")
+    parser.add_argument('idul', type=str, help='IDUL du joueur')
+    parser.add_argument("-a", "--automatique", help='Activer le mode automatique.', action='store_false', default=False)
+    parser.add_argument('-x', "--graphique", help="Activer le mode graphique.", action='store_false', default=False)
+
     return parser.parse_args()
 
 
