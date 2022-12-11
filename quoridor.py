@@ -107,13 +107,14 @@ class Quoridor:
             #Dealing with more errors
             if not isinstance(murs, dict):
                 QuoridorError.walls_invalid_type()
-            if state["joueurs"][0]["murs"] + state["joueurs"][1]["murs"]\
-                + len(state["murs"]["horizontaux"]) + len(state["murs"]["verticaux"]) != 20:
-                QuoridorError.invalid_wall_count()
 
             #Add the walls info to the final dictionary
             state["murs"]["horizontaux"] = murs["horizontaux"]
             state["murs"]["verticaux"] = murs["verticaux"]
+
+            if state["joueurs"][0]["murs"] + state["joueurs"][1]["murs"]\
+                + len(state["murs"]["horizontaux"]) + len(state["murs"]["verticaux"]) != 20:
+                QuoridorError.invalid_wall_count()
 
             #Last error check to make sure that the walls are in valid places
             for wall in state["murs"]["horizontaux"]:
@@ -479,7 +480,6 @@ class Quoridor:
         if joueur not in (1, 2):
             QuoridorError.incorrect_p_number_assigned()
 
-        #No idea why this can't be self.est_terminee, but that's a dict right now
         if self.est_terminée() is not False:
             QuoridorError.end_of_the_game()
 
@@ -494,6 +494,4 @@ class Quoridor:
         next_step = nx.shortest_path(graphe, tuple(state["joueurs"][joueur - 1]["pos"]),\
             'B' + str(joueur))
 
-        self.déplacer_jeton(joueur, next_step[1])
-
-        return state
+        return ("D", next_step[1])

@@ -2,7 +2,7 @@
 
 Ce programme permet de joueur au jeu Quoridor.
 """
-# from api import débuter_partie, jouer_coup, lister_parties
+from api import débuter_partie, jouer_coup, lister_parties
 from quoridor import Quoridor
 from utilitaire import analyser_commande, formater_les_parties
 
@@ -21,8 +21,42 @@ if __name__ == "__main__":
         print("GRAPHIC TEST")
 
     elif args.automatique:
+        joueurs = []
+        id_partie, ini_dic = débuter_partie(args.idul, SECRET)
         #Play automatically against the server without the GUI
-        pass
+        for i in range(2):
+            joueurs.append(ini_dic['joueurs'][i]['nom'])
+
+        game = Quoridor(joueurs)
+
+        while not game.est_terminée():
+            print(game)
+            #TODO Check if I can be player 2 against the server
+            choice, position = game.jouer_le_coup(1) #Auto play my move
+            # choice, position = game.récupérer_le_coup(1)
+
+            id_partie, new_state = jouer_coup(
+                id_partie,
+                choice,
+                position,
+                args.idul,
+                SECRET,
+             )
+            # print(new_state)
+            game = Quoridor(new_state['état']['joueurs'], new_state['état']['murs'] )
+
+            # choice, pos = game.récupérer_le_coup(1)
+            # if choice == "D":
+            #     game.déplacer_jeton(1, pos)
+            # else:
+            #     game.placer_un_mur(1, pos, choice)
+            # if not game.est_terminée():
+            #     game.jouer_le_coup(2)
+
+        print(game)
+        print(f"Congrats to {game.est_terminée()} for your incredible victory")
+
+
 
     else:
         #play manually against the server without GUI
