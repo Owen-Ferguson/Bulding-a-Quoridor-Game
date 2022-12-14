@@ -42,16 +42,8 @@ if __name__ == "__main__":
                 args.idul,
                 SECRET,
              )
-            # print(new_state)
+            
             game = Quoridor(new_state['état']['joueurs'], new_state['état']['murs'] )
-
-            # choice, pos = game.récupérer_le_coup(1)
-            # if choice == "D":
-            #     game.déplacer_jeton(1, pos)
-            # else:
-            #     game.placer_un_mur(1, pos, choice)
-            # if not game.est_terminée():
-            #     game.jouer_le_coup(2)
 
         print(game)
         print(f"Congrats to {game.est_terminée()} for your incredible victory")
@@ -60,61 +52,28 @@ if __name__ == "__main__":
 
     else:
         #play manually against the server without GUI
-        pass
+        joueurs = []
+        id_partie, ini_dic = débuter_partie(args.idul, SECRET)
+        #Play automatically against the server without the GUI
+        for i in range(2):
+            joueurs.append(ini_dic['joueurs'][i]['nom'])
 
-    # joueurs = ["Player", "Robot"]
-    # game = Quoridor(joueurs)
+        game = Quoridor(joueurs)
 
-    # while not game.est_terminée():
-    #     print(game)
-    #     choice, pos = game.récupérer_le_coup(1)
-    #     if choice == "D":
-    #         game.déplacer_jeton(1, pos)
-    #     else:
-    #         game.placer_un_mur(1, pos, choice)
-    #     if not game.est_terminée():
-    #         game.jouer_le_coup(2)
+        while not game.est_terminée():
+            print(game)
+            #TODO Check if I can be player 2 against the server
+            choice, position = game.récupérer_le_coup(1) #Make manual decision
 
-    # print(game)
-    # print(f"Congrats to {game.est_terminée()} for your incredible victory")
+            id_partie, new_state = jouer_coup(
+                id_partie,
+                choice,
+                position,
+                args.idul,
+                SECRET,
+             )
+            
+            game = Quoridor(new_state['état']['joueurs'], new_state['état']['murs'] )
 
-
-    # args = analyser_commande()
-    # if args.parties:
-    #     parties = lister_parties(args.idul, SECRET)
-    #     print(formater_les_parties(parties))
-    # else:
-#     if args.local:
-
-    # We might do pretty the same things as if we wanted to play
-    # with a virtual bot, but we must consider to play player 1 and 2?
-
-    # id_partie, état = débuter_partie(args.idul, SECRET)
-    #     while True:
-    #     # Afficher la partie
-    #     print(formater_jeu(état))
-    #     # Demander au joueur 1 de choisir son prochain coup
-    #     type_coup, position = récupérer_le_coup()
-
-        # Demander au joueur 2 de choisir son prochain coup
-
-
-#     pass
-# else:
-    # When playing against the server bot. This is copy pasted from Proj1;
-    # probably needs to be rewritten for OOP.
-
-    # id_partie, état = débuter_partie(args.idul, SECRET)
-    # while True:
-    #     # Afficher la partie
-    #     print(formater_jeu(état))
-    #     # Demander au joueur de choisir son prochain coup
-    #     type_coup, position = récupérer_le_coup()
-    #     # Envoyez le coup au serveur
-    #     id_partie, état = jouer_coup(
-    #         id_partie,
-    #         type_coup,
-    #         position,
-    #         args.idul,
-    #         SECRET,
-    #     )
+        print(game)
+        print(f"Congrats to {game.est_terminée()} for your incredible victory")
