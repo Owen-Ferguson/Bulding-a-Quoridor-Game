@@ -491,6 +491,26 @@ class Quoridor:
             state['murs']['verticaux']
         )
 
+        #TODO To make this automatic play a bit smarter, we are going to take several steps:
+        '''
+        1. Check the length of the shortest path for each player
+        2a.       if our path is shorter, make a move in the shortest path
+        2b.       if their path is shorter, place a wall
+        3.        if wall, then place it in the way of their shortest path
+            For that, we can either test a bunch of placements, calculate the number of 
+            steps it added for the opponent, and place the most effective wall,
+
+            OR
+
+            We can test a few walls in different orientations in an area around the other players
+            next move, and place the first wall that adds at least 2 steps to their shortest path
+
+            Option 1 will win us more games, but we won't do it if the processing time is too long
+            This I'm not so sure of; will it take too long? We want less than ~5 seconds per turn.
+        
+        
+        '''
+
         next_step = nx.shortest_path(graphe, tuple(state["joueurs"][joueur - 1]["pos"]),\
             'B' + str(joueur))
 
