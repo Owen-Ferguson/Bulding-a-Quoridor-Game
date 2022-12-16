@@ -423,6 +423,19 @@ class Quoridor:
                         i[1] == (position[1] - 1):
                         QuoridorError.wall_already_here()
 
+        #Error when placing overlapping horizontal and vertical walls
+        if orientation == "verticaux":
+            for i in state['murs']['horizontaux']:
+                if i[0] == (position[0] - 1) and\
+                    i[1] == (position[1] + 1):
+                    QuoridorError.wall_already_here()
+
+        if orientation == "horizontaux":
+            for i in state['murs']['verticaux']:
+                if i[0] == (position[0] - 1) and\
+                    i[1] == (position[1] + 1):
+                    QuoridorError.wall_already_here()
+
         #Error 3(1) If the given position is outside the limitation of the board:
         x, y = position[0], position[1]
         if 1 > x or x > 9 or 1 > y or y > 9:
