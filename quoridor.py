@@ -493,8 +493,8 @@ class Quoridor:
         if joueur not in (1, 2):
             QuoridorError.incorrect_p_number_assigned()
 
-        if self.est_terminée() is not False:
-            QuoridorError.end_of_the_game()
+        # if self.est_terminée() is not False:
+        #     QuoridorError.end_of_the_game()
 
         state = self.état
 
@@ -523,7 +523,19 @@ class Quoridor:
         
         
         '''
+        shortest_p1 = nx.shortest_path(graphe, tuple(state["joueurs"][0]["pos"]), 'B1') 
+        shortest_p2 = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
+        
+        if len(shortest_p1) <= len(shortest_p2):
+            next_step_p1 = shortest_p1[1]
+            return next_step_p1
 
+        elif len(shortest_p1) > len(shortest_p2):
+            #Not sure about the fact that it has to be horizontal orientation everytime
+            #Still trying to figure out how to decide about the orientation
+            Quoridor.placer_un_mur(state, 1, shortest_p2[1], "MH")
+            
+        
         next_step = nx.shortest_path(graphe, tuple(state["joueurs"][joueur - 1]["pos"]),\
             'B' + str(joueur))
 
