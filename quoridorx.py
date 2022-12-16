@@ -1,5 +1,18 @@
-import turtle
+"""QuoridorX module
 
+Implements the graphic mode of a Quoridor game (automatic or manual)
+"""
+
+import turtle
+from quoridor import Quoridor
+
+
+
+class QuoridorX(Quoridor):
+    def __init__(self, joueurs, murs=None):
+        super().__init__(joueurs, murs)
+        
+        
 #Setting colour names for quick reference
 bg = "gainsboro"
 line = "black"
@@ -117,3 +130,4 @@ wall(5, 6, "MH")
 t.hideturtle()
 turtle.update()
 turtle.exitonclick()
+
