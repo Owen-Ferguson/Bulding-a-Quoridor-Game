@@ -531,9 +531,16 @@ class Quoridor:
             return next_step_p1
 
         elif len(shortest_p1) > len(shortest_p2):
-            #Not sure about the fact that it has to be horizontal orientation everytime
-            #Still trying to figure out how to decide about the orientation
-            Quoridor.placer_un_mur(state, 1, shortest_p2[1], "MH")
+            wall_choice = Quoridor.placer_un_mur(state, 1, shortest_p2[1], "MH")
+            shortest_p2_modif = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
+            if len(shortest_p2_modif) >= 2:
+                return wall_choice
+             
+        #I tried to do a simple version here with only 1 option inspired by what you wrote above, 
+        #but I was wondering if it would be better to divide the "wall_choice" variable 
+        #into several sub-variables, each of which takes a wall placement possibility, 
+        #and then compare which of the wall_choice sub-variables seems to be the most efficient?
+            
             
         
         next_step = nx.shortest_path(graphe, tuple(state["joueurs"][joueur - 1]["pos"]),\
