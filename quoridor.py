@@ -523,12 +523,37 @@ class Quoridor:
         
         
         '''
-        # shortest_p1 = nx.shortest_path(graphe, tuple(state["joueurs"][0]["pos"]), 'B1') 
-        # shortest_p2 = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
+        shortest_p1 = nx.shortest_path(graphe, tuple(state["joueurs"][0]["pos"]), 'B1') 
+        shortest_p2 = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
         
-        # if len(shortest_p1) <= len(shortest_p2):
-        #     next_step_p1 = shortest_p1[1]
-        #     return next_step_p1
+        if len(shortest_p1) < len(shortest_p2):
+            next_step_p1 = shortest_p1[1]
+            return("D", next_step_p1)
+
+        else:
+            path_length = []
+            for i in range(len(shortest_p2)): #The size of this list will change below; not sure if it will affect the loop
+
+                #We need to add a bunch of if statements here so that we don't trigger the errors in the placer_un_mur function
+                Quoridor.placer_un_mur(state, 1, shortest_p2[i], shortest_p2[i], "MH")
+
+
+                path_length.append(("MH", (shortest_p2[i], shortest_p2[i]), len(shortest_p2)))
+                Quoridor.remove_wall(state, 1, shortest_p2[i], shortest_p2[i], "MH")#TODO THIS FUNCTION DOES NOT EXIST YET
+                Quoridor.placer_un_mur(state, 1, shortest_p2[i], shortest_p2[i], "MV")
+                path_length.append(("MV", (shortest_p2[i], shortest_p2[i]), len(shortest_p2)))
+                Quoridor.remove_wall(state, 1, shortest_p2[i], shortest_p2[i], "MV")#TODO THIS FUNCTION DOES NOT EXIST YET
+
+            #This line returns the element of the list that adds the largest number of steps for p2.
+            #If there are multiple options, it still only returns 1 which is fine
+            best_move = max(path_length, key=lambda x:x[2])
+
+            #This will return something like ("MH", (2, 2))
+            return(best_move[0], (best_move[1][0], best_move[1][1]))
+
+
+
+
 
         # elif len(shortest_p1) > len(shortest_p2):
         #     wall_choice = Quoridor.placer_un_mur(state, 1, shortest_p2[1], "MH")
@@ -542,8 +567,9 @@ class Quoridor:
         #and then compare which of the wall_choice sub-variables seems to be the most efficient?
             
             
-        
-        next_step = nx.shortest_path(graphe, tuple(state["joueurs"][joueur - 1]["pos"]),\
-            'B' + str(joueur))
+        ################################################################################################################
+        #Can uncomment the lines below here to make the simple version of the code work
+        # next_step = nx.shortest_path(graphe, tuple(state["joueurs"][joueur - 1]["pos"]),\
+        #     'B' + str(joueur))
 
-        return ("D", next_step[1])
+        # return ("D", next_step[1])
