@@ -7,6 +7,7 @@ from quoridor import Quoridor
 from utilitaire import analyser_commande, formater_les_parties
 from quoridorx import QuoridorX
 import turtle
+import time
 
 # Mettre ici votre secret récupéré depuis le site de PAX
 SECRET = "523d4f1b-6ca7-4879-9d15-40ff4fcbfb3b"
@@ -15,8 +16,34 @@ if __name__ == "__main__":
     args = analyser_commande()
 
     if args.automatique and args.graphique:
+        
         #Play auto against server with GUI
-        print("TESTING AUTOMATIC")
+        turtle.screensize(canvwidth=400, canvheight=400, bg="gainsboro")
+
+        joueurs = []
+        id_partie, ini_dic = débuter_partie(args.idul, SECRET)
+        #Play automatically against the server without the GUI
+        for i in range(2):
+            joueurs.append(ini_dic['joueurs'][i]['nom'])
+
+        game = QuoridorX(joueurs)
+
+        while not game.est_terminée():
+            game.gui() 
+            #TODO Check if I can be player 2 against the server
+            choice, position = game.jouer_le_coup(1) 
+
+
+            id_partie, new_state = jouer_coup(
+                id_partie,
+                choice,
+                position,
+                args.idul,
+                SECRET,
+                )
+            
+            game = QuoridorX(new_state['état']['joueurs'], new_state['état']['murs'])
+            time.sleep(.3) #TRYING TO STALL THE PROGRAM SO IT DOESN'T CRASH
 
     elif args.graphique:
         #Play manually against the server with GUI
@@ -44,9 +71,7 @@ if __name__ == "__main__":
                 SECRET,
                 )
             
-            # print(new_state)
-            # turtle.exitonclick()
-            game = QuoridorX(new_state['état']['joueurs'], new_state['état']['murs'] )
+            game = QuoridorX(new_state['état']['joueurs'], new_state['état']['murs'])
         ####################################################################
         
 
