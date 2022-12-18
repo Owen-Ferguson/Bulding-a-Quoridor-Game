@@ -5,6 +5,8 @@ Ce programme permet de joueur au jeu Quoridor.
 from api import débuter_partie, jouer_coup, lister_parties
 from quoridor import Quoridor
 from utilitaire import analyser_commande, formater_les_parties
+from quoridorx import QuoridorX
+import turtle
 
 # Mettre ici votre secret récupéré depuis le site de PAX
 SECRET = "523d4f1b-6ca7-4879-9d15-40ff4fcbfb3b"
@@ -18,7 +20,35 @@ if __name__ == "__main__":
 
     elif args.graphique:
         #Play manually against the server with GUI
-        print("GRAPHIC TEST")
+        ####################################################################
+        turtle.screensize(canvwidth=400, canvheight=400, bg="gainsboro")
+
+        joueurs = []
+        id_partie, ini_dic = débuter_partie(args.idul, SECRET)
+        #Play automatically against the server without the GUI
+        for i in range(2):
+            joueurs.append(ini_dic['joueurs'][i]['nom'])
+
+        game = QuoridorX(joueurs)
+
+        while not game.est_terminée():
+            game.gui() #TODO THIS IS THE ONLY LINE THAT CHANGES FOR TURTLE GUI
+            #TODO Check if I can be player 2 against the server
+            choice, position = game.récupérer_le_coup(1) #Make manual decision
+
+            id_partie, new_state = jouer_coup(
+                id_partie,
+                choice,
+                position,
+                args.idul,
+                SECRET,
+                )
+            
+            # print(new_state)
+            # turtle.exitonclick()
+            game = QuoridorX(new_state['état']['joueurs'], new_state['état']['murs'] )
+        ####################################################################
+        
 
     elif args.automatique:
         joueurs = []

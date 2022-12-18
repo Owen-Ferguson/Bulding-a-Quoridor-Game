@@ -523,18 +523,18 @@ class Quoridor:
         
         
         '''
-        shortest_p1 = nx.shortest_path(graphe, tuple(state["joueurs"][0]["pos"]), 'B1') 
-        shortest_p2 = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
+        # shortest_p1 = nx.shortest_path(graphe, tuple(state["joueurs"][0]["pos"]), 'B1') 
+        # shortest_p2 = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
         
-        if len(shortest_p1) <= len(shortest_p2):
-            next_step_p1 = shortest_p1[1]
-            return next_step_p1
+        # if len(shortest_p1) <= len(shortest_p2):
+        #     next_step_p1 = shortest_p1[1]
+        #     return next_step_p1
 
-        elif len(shortest_p1) > len(shortest_p2):
-            wall_choice = Quoridor.placer_un_mur(state, 1, shortest_p2[1], "MH")
-            shortest_p2_modif = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
-            if len(shortest_p2_modif) >= 2:
-                return wall_choice
+        # elif len(shortest_p1) > len(shortest_p2):
+        #     wall_choice = Quoridor.placer_un_mur(state, 1, shortest_p2[1], "MH")
+        #     shortest_p2_modif = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
+        #     if len(shortest_p2_modif) >= 2:
+        #         return wall_choice
              
         #I tried to do a simple version here with only 1 option inspired by what you wrote above, 
         #but I was wondering if it would be better to divide the "wall_choice" variable 
