@@ -531,18 +531,38 @@ class Quoridor:
             return("D", next_step_p1)
 
         else:
+            def temp_wall(x, y, orientation):
+                #TODO NEED TO ADD IF STATEMENTS HERE BEFORE 
+                # CHANGING THE VALUES IN STATE[MURS] TO PREVENT QUORIDORERRORS 
+                # THAT WOULD END THE CODE TOO EARLY
+                if orientation == "MH":
+                    state['murs']['horizontaux'] += [[x, y]]
+                elif orientation == "MV":
+                    state['murs']['verticaux'] += [[x, y]]
+            
+            def remove_temp_wall(x, y, orientation):
+                #No if statements required here for error coverage; we only call the function after placing a temp wall
+                if orientation == "MH":
+                    state['murs']['horizontaux'].remove([x, y])
+                elif orientation == "MV":
+                    state['murs']['verticaux'].remove([x, y])
+
             path_length = []
             for i in range(len(shortest_p2)): #The size of this list will change below; not sure if it will affect the loop
 
-                #We need to add a bunch of if statements here so that we don't trigger the errors in the placer_un_mur function
-                Quoridor.placer_un_mur(state, 1, shortest_p2[i], shortest_p2[i], "MH")
+                #could shorten with 
+                #for j in ["MH", "MV"]:
+                    #temp_wall(x, y, j)
+                    #path_length.append(j, ...)
+                    #temp_wall_remove(x, y, j)
 
-
+                #Add a horizontal temp wall, determine the length of the P2 shortest path, remove it, repeat with vertical
+                temp_wall(shortest_p2[i], shortest_p2[i], "MH")
                 path_length.append(("MH", (shortest_p2[i], shortest_p2[i]), len(shortest_p2)))
-                Quoridor.remove_wall(state, 1, shortest_p2[i], shortest_p2[i], "MH")#TODO THIS FUNCTION DOES NOT EXIST YET
-                Quoridor.placer_un_mur(state, 1, shortest_p2[i], shortest_p2[i], "MV")
+                remove_temp_wall(shortest_p2[i], shortest_p2[i], "MH")
+                temp_wall(shortest_p2[i], shortest_p2[i], "MV")
                 path_length.append(("MV", (shortest_p2[i], shortest_p2[i]), len(shortest_p2)))
-                Quoridor.remove_wall(state, 1, shortest_p2[i], shortest_p2[i], "MV")#TODO THIS FUNCTION DOES NOT EXIST YET
+                remove_temp_wall(shortest_p2[i], shortest_p2[i], "MV")
 
             #This line returns the element of the list that adds the largest number of steps for p2.
             #If there are multiple options, it still only returns 1 which is fine
