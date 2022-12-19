@@ -523,6 +523,10 @@ class Quoridor:
         
         
         '''
+
+
+
+        '''
         shortest_p1 = nx.shortest_path(graphe, tuple(state["joueurs"][0]["pos"]), 'B1') 
         shortest_p2 = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
         
@@ -586,10 +590,10 @@ class Quoridor:
         #into several sub-variables, each of which takes a wall placement possibility, 
         #and then compare which of the wall_choice sub-variables seems to be the most efficient?
             
-            
+            '''
         ################################################################################################################
         #Can uncomment the lines below here to make the simple version of the code work
-        # next_step = nx.shortest_path(graphe, tuple(state["joueurs"][joueur - 1]["pos"]),\
-        #     'B' + str(joueur))
+        next_step = nx.shortest_path(graphe, tuple(state["joueurs"][joueur - 1]["pos"]),\
+            'B' + str(joueur))
 
-        # return ("D", next_step[1])
+        return ("D", next_step[1])
