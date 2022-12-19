@@ -535,11 +535,25 @@ class Quoridor:
                 #TODO NEED TO ADD IF STATEMENTS HERE BEFORE 
                 # CHANGING THE VALUES IN STATE[MURS] TO PREVENT QUORIDORERRORS 
                 # THAT WOULD END THE CODE TOO EARLY
-                if orientation == "MH":
-                    state['murs']['horizontaux'] += [[x, y]]
-                elif orientation == "MV":
-                    state['murs']['verticaux'] += [[x, y]]
-            
+                if x > 1 or x < 9 or y > 1 or y < 9:
+                    try:
+                        if orientation == "MH":
+                            state['murs']['horizontaux'] += [[x, y]]
+                        elif orientation == "MV":
+                            state['murs']['verticaux'] += [[x, y]]
+                    except QuoridorError.incorrect_wall_number():
+                        pass
+
+                    except QuoridorError.incorrect_wall_orientation():
+                        pass
+
+                    except QuoridorError.invalid_wall_placement():
+                        pass
+                    
+                    else:
+                        print("Errors avoided!")
+
+
             def remove_temp_wall(x, y, orientation):
                 #No if statements required here for error coverage; we only call the function after placing a temp wall
                 if orientation == "MH":
@@ -548,7 +562,7 @@ class Quoridor:
                     state['murs']['verticaux'].remove([x, y])
 
             path_length = []
-            for i in range(len(shortest_p2)): #The size of this list will change below; not sure if it will affect the loop
+            for i in range(len(shortest_p2) - 1): #The size of this list will change below; not sure if it will affect the loop
 
                 #could shorten with 
                 #for j in ["MH", "MV"]:
@@ -557,12 +571,12 @@ class Quoridor:
                     #temp_wall_remove(x, y, j)
 
                 #Add a horizontal temp wall, determine the length of the P2 shortest path, remove it, repeat with vertical
-                temp_wall(shortest_p2[i], shortest_p2[i], "MH")
-                path_length.append(("MH", (shortest_p2[i], shortest_p2[i]), len(shortest_p2)))
-                remove_temp_wall(shortest_p2[i], shortest_p2[i], "MH")
-                temp_wall(shortest_p2[i], shortest_p2[i], "MV")
-                path_length.append(("MV", (shortest_p2[i], shortest_p2[i]), len(shortest_p2)))
-                remove_temp_wall(shortest_p2[i], shortest_p2[i], "MV")
+                temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MH")
+                path_length.append(("MH", (shortest_p2[i][0], shortest_p2[i][1]), len(shortest_p2)))
+                remove_temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MH")
+                temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MV")
+                path_length.append(("MV", (shortest_p2[i][0], shortest_p2[i][1]), len(shortest_p2)))
+                remove_temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MV")
 
             #This line returns the element of the list that adds the largest number of steps for p2.
             #If there are multiple options, it still only returns 1 which is fine
