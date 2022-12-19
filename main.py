@@ -29,10 +29,11 @@ if __name__ == "__main__":
         game = QuoridorX(joueurs)
 
         while not game.est_terminée():
-            game.gui() 
+            
+            # game.gui() #TODO THIS IS THE ONLY LINE THAT CHANGES FOR TURTLE GUI
+            #TODO Can't see the game as it is updating
             #TODO Check if I can be player 2 against the server
-            choice, position = game.jouer_le_coup(1) 
-
+            choice, position = game.jouer_le_coup(1) #Make manual decision
 
             id_partie, new_state = jouer_coup(
                 id_partie,
@@ -43,7 +44,11 @@ if __name__ == "__main__":
                 )
             
             game = QuoridorX(new_state['état']['joueurs'], new_state['état']['murs'])
-            time.sleep(.3) #TRYING TO STALL THE PROGRAM SO IT DOESN'T CRASH
+
+        
+        print(f"Congrats to {game.est_terminée()} for your incredible victory")
+        game.gui()
+        turtle.exitonclick()
 
     elif args.graphique:
         #Play manually against the server with GUI
@@ -59,6 +64,7 @@ if __name__ == "__main__":
         game = QuoridorX(joueurs)
 
         while not game.est_terminée():
+            
             game.gui() #TODO THIS IS THE ONLY LINE THAT CHANGES FOR TURTLE GUI
             #TODO Check if I can be player 2 against the server
             choice, position = game.récupérer_le_coup(1) #Make manual decision
@@ -72,6 +78,9 @@ if __name__ == "__main__":
                 )
             
             game = QuoridorX(new_state['état']['joueurs'], new_state['état']['murs'])
+
+        print(f"Congrats to {game.est_terminée()} for your incredible victory")
+        game.gui()
         ####################################################################
         
 
@@ -132,3 +141,5 @@ if __name__ == "__main__":
 
         print(game)
         print(f"Congrats to {game.est_terminée()} for your incredible victory")
+
+    
