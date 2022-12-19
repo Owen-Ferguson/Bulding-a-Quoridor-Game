@@ -10,7 +10,7 @@ import turtle
 import time
 
 # Mettre ici votre secret récupéré depuis le site de PAX
-SECRET = "523d4f1b-6ca7-4879-9d15-40ff4fcbfb3b"
+SECRET = "87877acb-c834-4725-a127-61634c821053"
 
 if __name__ == "__main__":
     args = analyser_commande()
@@ -87,7 +87,7 @@ if __name__ == "__main__":
         while not game.est_terminée():
             print(game)
             #TODO Check if I can be player 2 against the server
-            choice, position = game.jouer_le_coup(1) #Auto play my move
+            choice, position = Quoridor.jouer_le_coup(game, 1) #Auto play my move
             # choice, position = game.récupérer_le_coup(1)
 
             id_partie, new_state = jouer_coup(
@@ -97,8 +97,8 @@ if __name__ == "__main__":
                 args.idul,
                 SECRET,
              )
-            
-            game = Quoridor(new_state['état']['joueurs'], new_state['état']['murs'] )
+            print(new_state)
+            game = Quoridor(new_state['état']['joueurs'], new_state['état']['murs'])
 
         print(game)
         print(f"Congrats to {game.est_terminée()} for your incredible victory")
