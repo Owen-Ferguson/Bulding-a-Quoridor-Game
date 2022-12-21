@@ -44,7 +44,6 @@ if __name__ == "__main__":
                 )
             
             game = QuoridorX(new_state['état']['joueurs'], new_state['état']['murs'])
-            
 
         
         print(f"Congrats to {game.est_terminée()} for your incredible victory")
@@ -99,7 +98,6 @@ if __name__ == "__main__":
             #TODO Check if I can be player 2 against the server
             choice, position = Quoridor.jouer_le_coup(game, 1) #Auto play my move
             # choice, position = game.récupérer_le_coup(1)
-            
             id_partie, new_state = jouer_coup(
                 id_partie,
                 choice,
