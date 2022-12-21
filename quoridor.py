@@ -537,8 +537,8 @@ class Quoridor:
 
         shortest_p1 = nx.shortest_path(graphe, tuple(state["joueurs"][0]["pos"]), 'B1') 
         shortest_p2 = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
-
-        if len(shortest_p1) <= len(shortest_p2) or state['joueurs'][0]['murs'] == 0:
+        
+        if len(shortest_p1) <= len(shortest_p2):
             next_step_p1 = shortest_p1[1]
             return("D", next_step_p1)
 
@@ -555,17 +555,17 @@ class Quoridor:
                             self.placer_un_mur(1, (x,y), "MV")
 
                     except QuoridorError.incorrect_wall_number():
-                        return
+                        pass
 
                     except QuoridorError.incorrect_wall_orientation():
-                        return 
+                        pass
 
                     except QuoridorError.invalid_wall_placement():
-                        return
+                        pass
                     
                     except QuoridorError.wall_already_here():
-                        return
-                    
+                        pass
+
 
 
             def remove_temp_wall(x, y, orientation):
@@ -581,8 +581,8 @@ class Quoridor:
             to_remove = []
             for i in range(len(shortest_p2)):
                 for mur in state['murs']['horizontaux']:
-                    if (mur[0] == shortest_p2[i][0] - 1 or mur[0] == shortest_p2[i][0] or mur[0] == shortest_p2[i][0] + 1) and\
-                    mur[1] == (shortest_p2[i][1]):
+                    if (mur[0] == shortest_p2[i][0] - 1 or mur[0] == shortest_p2[i][0] \
+                    or mur[0] == shortest_p2[i][0] + 1) and mur[1] == (shortest_p2[i][1]):
                         to_remove.append((shortest_p2[i][0], shortest_p2[i][1]))
                         break
                     
@@ -591,9 +591,9 @@ class Quoridor:
                     (mur_v[1] == (shortest_p2[i][1] + 1) or mur_v[1] == shortest_p2[i][1] or mur_v[1] == shortest_p2[i][1] - 1):
                         to_remove.append((shortest_p2[i][0], shortest_p2[i][1]))
                         break
-            # print(to_remove, shortest_p2)
+
             for removal in to_remove:
-                if removal in shortest_p2:
+                if removal in to_remove:
                     shortest_p2.remove(removal)
 
             for i in range(len(shortest_p2)): #The size of this list will change below; not sure if it will affect the loop
@@ -605,21 +605,15 @@ class Quoridor:
                     #temp_wall_remove(x, y, j)
                 #Add a horizontal temp wall, determine the length of the P2 shortest path, remove it, repeat with vertical
                 #Check if the temp wall will be out of bounds
-                # print((shortest_p2[i][0], shortest_p2[i][1]))
                 if shortest_p2[i][0] >= 1 and shortest_p2[i][0] < 9 and shortest_p2[i][1] <= 9 and shortest_p2[i][1] > 1:
-                    # print('test MH')
                     temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MH")
-                    new_shortest_p2 = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
-                    path_length.append(("MH", (shortest_p2[i][0], shortest_p2[i][1]), len(new_shortest_p2)))
+                    path_length.append(("MH", (shortest_p2[i][0], shortest_p2[i][1]), len(shortest_p2)))
                     remove_temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MH")
                 if shortest_p2[i][0] > 1 and shortest_p2[i][0] < 9 and shortest_p2[i][1] > 1 and shortest_p2[i][1] < 9:
-                    # print('test MV')
                     temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MV")
-                    new_shortest_p2 = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
-                    path_length.append(("MV", (shortest_p2[i][0], shortest_p2[i][1] - 1), len(new_shortest_p2)))
+                    path_length.append(("MV", (shortest_p2[i][0], shortest_p2[i][1] - 1), len(shortest_p2)))
                     remove_temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MV")
                 if shortest_p2[i][0] == 9 and shortest_p2[i][1] < 9 and shortest_p2[i][1] > 1:
-                    # print('test MH - sur le bord')
                     temp_wall(shortest_p2[i][0] - 1, shortest_p2[i][1], "MH")
                     path_length.append(("MH", (shortest_p2[i][0] - 1, shortest_p2[i][1]), len(shortest_p2)))
                     remove_temp_wall(shortest_p2[i][0] - 1, shortest_p2[i][1], "MH")
@@ -632,8 +626,6 @@ class Quoridor:
                 best_move = ("D", shortest_p1[1])
             else:
                 best_move = max(path_length, key=lambda x:x[2])
-
-            # print(best_move)
 
             #This will return something like ("MH", (2, 2))
             return(best_move[0], (best_move[1][0], best_move[1][1]))
