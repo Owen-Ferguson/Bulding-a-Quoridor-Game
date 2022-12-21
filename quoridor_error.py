@@ -42,8 +42,8 @@ class QuoridorError(Exception):
         QuoridorError: Le nombre de murs qu'un joueur peut placer est plus
         grand que 10, ou négatif.
             """
-        raise QuoridorError(''.join(("Le nombre de murs qu'un joueur peut placer",
-            " est plus grand que 10, ou négatif.")))
+        raise QuoridorError("Le nombre de murs qu'un joueur peut placer\
+            est plus grand que 10, ou négatif.")
 
     def invalid_player_position(self=None):
         """Position entrée pour le joueur est incorrecte
