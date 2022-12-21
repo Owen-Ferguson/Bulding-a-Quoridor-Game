@@ -34,7 +34,7 @@ if __name__ == "__main__":
             #TODO Check if I can be player 2 against the server
             choice, position = game.jouer_le_coup(1) #Auto play my move
             # choice, position = game.récupérer_le_coup(1)
-
+            
             id_partie, new_state = jouer_coup(
                 id_partie,
                 choice,
