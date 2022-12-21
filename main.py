@@ -7,7 +7,7 @@ from quoridor import Quoridor
 from utilitaire import analyser_commande, formater_les_parties
 
 # Mettre ici votre secret récupéré depuis le site de PAX
-SECRET = "523d4f1b-6ca7-4879-9d15-40ff4fcbfb3b"
+SECRET = "87877acb-c834-4725-a127-61634c821053"
 
 if __name__ == "__main__":
     args = analyser_commande()
