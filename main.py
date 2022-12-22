@@ -3,10 +3,9 @@
 Ce programme permet de joueur au jeu Quoridor.
 """
 import turtle
-import time
-from api import débuter_partie, jouer_coup, lister_parties
+from api import débuter_partie, jouer_coup
 from quoridor import Quoridor
-from utilitaire import analyser_commande, formater_les_parties
+from utilitaire import analyser_commande
 from quoridorx import QuoridorX
 
 # Mettre ici votre secret récupéré depuis le site de PAX
