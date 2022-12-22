@@ -577,7 +577,7 @@ class Quoridor():
                 if removal in shortest_p2:
                     shortest_p2.remove(removal)
 
-            for i in range(len(shortest_p2)):
+            for i in enumerate(shortest_p2):
                 #The size of this list will change below; not sure if it will affect the loop
                 #Add a horizontal temp wall, determine the length of the P2 shortest path,
                 #remove it, repeat with vertical
@@ -602,7 +602,7 @@ class Quoridor():
                         , len(new_shortest_p2)))
                         remove_temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MH")
 
-            for i in range(len(shortest_p2)):
+            for i in enumerate(shortest_p2):
                 if shortest_p2[i][0] > 1 and shortest_p2[i][0] < 9 and\
                 shortest_p2[i][1] > 1 and shortest_p2[i][1] < 9:
                     if [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['verticaux'] or\
@@ -619,7 +619,7 @@ class Quoridor():
                         , len(new_shortest_p2)))
                         remove_temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MV")
 
-            for i in range(len(shortest_p2)):
+            for i in enumerate(shortest_p2):
                 if shortest_p2[i][0] == 9 and shortest_p2[i][1] < 9 and shortest_p2[i][1] > 1:
                     temp_wall(shortest_p2[i][0] - 1, shortest_p2[i][1], "MH")
                     path_length.append(("MH", (shortest_p2[i][0] - 1, shortest_p2[i][1])\
