@@ -572,7 +572,7 @@ class Quoridor():
 
             #V wall check
 
-            for i in range(len(shortest_p2)):
+            for i in enumerate(shortest_p2):
                 if shortest_p2[i][0] > 1 and shortest_p2[i][0] < 9 and shortest_p2[i][1] > 1 and\
                     shortest_p2[i][1] < 9:
                     if [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['verticaux'] or\
@@ -602,7 +602,7 @@ class Quoridor():
 
             #H wall check
 
-            for i in range(len(shortest_p2)):
+            for i in enumerate(shortest_p2):
 
                 if shortest_p2[i][0] >= 1 and shortest_p2[i][0] < 9 and\
                     shortest_p2[i][1] <= 9 and shortest_p2[i][1] > 1:
