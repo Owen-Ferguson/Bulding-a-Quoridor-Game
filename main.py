@@ -2,12 +2,12 @@
 
 Ce programme permet de joueur au jeu Quoridor.
 """
+import turtle
+import time
 from api import débuter_partie, jouer_coup, lister_parties
 from quoridor import Quoridor
 from utilitaire import analyser_commande, formater_les_parties
 from quoridorx import QuoridorX
-import turtle
-import time
 
 # Mettre ici votre secret récupéré depuis le site de PAX
 SECRET = "87877acb-c834-4725-a127-61634c821053"
@@ -39,7 +39,7 @@ if __name__ == "__main__":
                 args.idul,
                 SECRET,
                 )
-            
+
             game = QuoridorX(new_state['état']['joueurs'], new_state['état']['murs'])
 
 

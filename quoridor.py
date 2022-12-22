@@ -519,7 +519,6 @@ class Quoridor():
             state['murs']['verticaux']
         )
 
-        #TODO To make this automatic play a bit smarter, we are going to take several steps:
         '''
         1. Check the length of the shortest path for each player
         2a.       if our path is shorter, make a move in the shortest path
@@ -553,9 +552,8 @@ class Quoridor():
                     except:
                         return
 
-
             def remove_temp_wall(x, y, orientation):
-                #No if statements required here for error coverage; 
+                #No if statements required here for error coverage;
                 #we only call the function after placing a temp wall
                 if orientation == "MH":
                     if (x, y) in state['murs']['horizontaux']:
@@ -579,9 +577,9 @@ class Quoridor():
                 if removal in shortest_p2:
                     shortest_p2.remove(removal)
 
-            for i in range(len(shortest_p2)): 
+            for i in range(len(shortest_p2)):
                 #The size of this list will change below; not sure if it will affect the loop
-                #Add a horizontal temp wall, determine the length of the P2 shortest path, 
+                #Add a horizontal temp wall, determine the length of the P2 shortest path,
                 #remove it, repeat with vertical
                 #Check if the temp wall will be out of bounds
                 #print(state['murs']['horizontaux'], [shortest_p2[i][0], shortest_p2[i][1]])
