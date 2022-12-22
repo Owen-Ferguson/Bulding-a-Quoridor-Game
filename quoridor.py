@@ -11,7 +11,7 @@ from graphe import construire_graphe
 
 import networkx as nx
 
-class Quoridor:
+class Quoridor():
     """Classe pour encapsuler le jeu Quoridor.
     Vous ne devez pas créer d'autre attributs pour votre classe.
 
@@ -157,107 +157,118 @@ class Quoridor:
 
     def formater_damier(self):
         """Formater la représentation graphique du damier.
-
+        Args:
+            joueurs (list): Liste de dictionnaires représentant les joueurs.
+            murs (dict): Dictionnaire représentant l'emplacement des murs.
         Returns:
             str: Chaîne de caractères représentant le damier.
         """
-        #Board is a list of lists
+        #Affiche le tableau de jeu vide
+        joueurs = self.état['joueurs']
+        murs = self.état['murs']
+        board = [["   " + "-" * 35],
+                ["9 " + "| " + ".   " * 8 + ". |"],
+                ["  " + "|" + " "* 34 + " |"],
+                ["8 " + "| " + ".   " * 8 + ". |"],
+                ["  " + "|" + " "* 34 + " |"],
+                ["7 " + "| " + ".   " * 8 + ". |"],
+                ["  " + "|" + " "* 34 + " |"],
+                ["6 " + "| " + ".   " * 8 + ". |"],
+                ["  " + "|" + " "* 34 + " |"],
+                ["5 " + "| " + ".   " * 8 + ". |"],
+                ["  " + "|" + " "* 34 + " |"],
+                ["4 " + "| " + ".   " * 8 + ". |"],
+                ["  " + "|" + " "* 34 + " |"],
+                ["3 " + "| " + ".   " * 8 + ". |"],
+                ["  " + "|" + " "* 34 + " |"],
+                ["2 " + "| " + ".   " * 8 + ". |"],
+                ["  " + "|" + " "* 34 + " |"],
+                ["1 " + "| " + ".   " * 8 + ". |"],
+                ["--" + "|" + "-"* 35],
+                ["  " + "| "+"1   "+"2   "+"3   "+"4   "+"5   "+"6   "+"7   "+"8   "+"9"]
+                ]
 
-        joueurs = self.état["joueurs"]
-        murs = self.état["murs"]
+        pos_player1 = joueurs[0]['pos']
+        pos_player2 = joueurs[1]['pos']
+        #on determine la constante qui nous permettra de traduire
+        #le numéro de position indiqué sur le display
+        #vers la ligne réelle du board: y=ax+b
+        #où a correspond a la pente, c'est à dire à chaque fois qu'on descend d'un numéro d'afficher,
+        #et b correspond au offset, c'est à dire quel numéro de ligne on cherche à traduire
+        #x correspond à l'élément de board[i] auquel on cherche à accéder
+        #Pour l'équation en colonne: y = 4x
 
-        #First row is just dashes
-        board = [["   " + 35*"-"]]
+        #Determine la position pour chaque joueur
+        corresp_row_p1 = int((-2 * pos_player1[1]) + 19)
+        corresp_row_p2 = int((-2 * pos_player2[1]) + 19)
 
-        #Create all middle sections; add space between rows
-        for i in range (9, 0, -1):
-            board.append([str(i) + ' |' + 8*" .  " + " . " + '|'])
-            board.append(["  |" + 8*"    " + "   |"])
+        corresp_col_p1 = int(4 * pos_player1[0])
+        corresp_col_p2 = int(4 * pos_player2[0])
 
-        #Remove last row (space that isn't needed)
-        board = board[:-1]
+        #Dans le cas où 2 joueurs sont sur la même ligne
+        if pos_player1[1] == pos_player2[1]:
+            if pos_player1[0] == pos_player2[0]:
+                raise Exception("Un joueur est déjà présent à cet emplacement!")
+            modif_row1 = [list(str(pos_player1[1]) + " |" + 8 * " .  " + " . " + "|")]
+            modif_row1[0][corresp_col_p1] = "1"
+            modif_row1[0][corresp_col_p2] = "2"
+            final_row1 = [''.join([str(elem) for elem in modif_row1[0]])]
+            board[corresp_row_p1] = final_row1
 
-        #Create final row
-        board.append(['--|' + 35*"-"])
-        last_row = ['  |']
-        for i in range(1, 9):
-            last_row[0] += f' {i}  '
-        last_row += "9"
-        board.append(last_row)
-        board.append("")
-
-        #To get the right row number: y = -2x + 19
-        #To get right y_coord: y = 4x
-
-        coord1 = joueurs[0]['pos']
-        coord2 = joueurs[1]['pos']
-
-        #Determine the row for each player
-        row1 = int(-2*coord1[1] + 19)
-        row2 = int(-2*coord2[1] + 19)
-
-        y_coord1 = int(4*coord1[0])
-        y_coord2 = int(4*coord2[0])
-
-        #Putting the two players in the same row
-        if coord1[1] == coord2[1]:
-            new_row1 = [list(str(coord1[1]) + ' |' + 8*" .  " + " . " + '|')]
-            new_row1[0][y_coord1] = "1"
-            new_row1[0][y_coord2] = "2"
-            mod_row1 = [''.join([str(elem) for elem in new_row1[0]])]
-            board[row1] = mod_row1
-
-        #If they are in different rows
+        #Dans le cas où les 2 joueurs sont sur différentes lignes
         else:
-            new_row1 = [list(str(coord1[1]) + ' |' + 8*" .  " + " . " + '|')]
-            new_row1[0][y_coord1] = "1"
-            new_row2 = [list(str(coord2[1]) + ' |' + 8*" .  " + " . " + '|')]
-            new_row2[0][y_coord2] = "2"
+            modif_row1 = [list(str(pos_player1[1]) + " |" + 8 * " .  " + " . " + "|")]
+            modif_row1[0][corresp_col_p1] = "1"
+            modif_row2 = [list(str(pos_player2[1]) + " |" + 8 * " .  " + " . " + "|")]
+            modif_row2[0][corresp_col_p2] = "2"
 
-            mod_row1 = [''.join([str(elem) for elem in new_row1[0]])]
-            mod_row2 = [''.join([str(elem) for elem in new_row2[0]])]
+            final_row1 = [''.join([str(elem) for elem in modif_row1[0]])]
+            final_row2 = [''.join([str(elem) for elem in modif_row2[0]])]
 
-            board[row1] = mod_row1
-            board[row2] = mod_row2
+            board[corresp_row_p1] = final_row1
+            board[corresp_row_p2] = final_row2
 
-        #Now add the walls
+        #Maintenant, on affiche les murs.
+        #1- les murs horizontaux
+        murs_horiz = murs["horizontaux"]
+        for mur in murs_horiz:
+            if 0 > mur[0] > 9 or 1 > mur[1] > 10:
+                raise Exception("Coordonnées invalides pour placer le mur")
+            mur_coord = mur
+            mur_row = int(-2* mur_coord[1] + 20)
+            mur_col = 4 * mur_coord[0] - 1
 
-        #Horizontal walls
-        h_walls = murs["horizontaux"]
-        for i in h_walls:
-            # if 0 > i[0] > 9 or 1 > i[1] > 10:
-            #     raise Exception("Invalid coordinates for a wall")
-            w_coor = i
-            w_row = int(-2*w_coor[1] + 20)
-            w_col = 4*w_coor[0] - 1
+            if "-" in board[mur_row][0][mur_col:mur_col+7]:
+                raise Exception("Il y a déjà un mur ici!")
 
-            #Only rewrite the row if not already created before
-            if "-" not in board[w_row][0]:
-                w_new_row1 = [list('  |' + 35*" " + '|')]
-            w_new_row1[0][w_col:w_col + 7] = "-------"
-            w_mod_row1 = [''.join([str(elem) for elem in w_new_row1[0]])]
+        #Réecris la ligne si pas déjà affichée avant
+            if "-" not in board[mur_row][0][mur_col:mur_col+7]:
+                new_row_mur1 = [list(board[mur_row][0])]
+                new_row_mur1[0][mur_col:mur_col+7] = "-------"
+                new_row_mur1 = [''.join([str(elem) for elem in new_row_mur1[0]])]
+                board[mur_row] = new_row_mur1
 
-            board[w_row] = w_mod_row1
+        #2- les murs verticaux
+        murs_verti = murs["verticaux"]
+        for mur in murs_verti:
+            if 0 > mur[0] > 9 or 1 > mur[1] > 10:
+                raise Exception("Coordonnées invalides pour placer le mur")
+            mur_coord = mur
 
-        #Vertical walls
-        v_walls = murs["verticaux"]
-        for i in v_walls:
-            w_coor = i
-            w_row1 = int(-2*w_coor[1] + 19)
-            #These are the 3 rows that a vertical wall will span
-            v_w_coords = [w_row1, w_row1 - 1, w_row1 - 2]
-            w_col = 4*w_coor[0] - 2
+            mur_row1 = int(-2* mur_coord[1] + 19)
+            #3 lignes que prend le mur vertical
+            murs_verti_coord = [mur_row1, mur_row1 - 1, mur_row1 - 2]
+            mur_col = 4 * mur_coord[0] - 2
 
-            for j in v_w_coords:
-                mod_row = list(board[j][0])
-                mod_row[w_col] = "|"
-                mod_row = [''.join([str(elem) for elem in mod_row])]
-                board[j] = mod_row
+            for mur2 in murs_verti_coord:
+                final_row = list(board[mur2][0])
+                final_row[mur_col] = "|"
+                final_row = [''.join([str(elem) for elem in final_row])]
+                board[mur2] = final_row
 
-        #Join the list of lists to create the final ASCII string
-        nb = '\n'.join(' '.join(sub) for sub in board)
-
-        return nb
+        #This line pour enlever les crochets autour des éléments
+        new_board = '\n'.join(' '.join(sub) for sub in board)
+        return new_board + '\n'
 
     def __str__(self):
         """Représentation en art ascii de l'état actuel de la partie.
@@ -399,12 +410,11 @@ class Quoridor:
 
         if orientation == "MH":
             orientation = "horizontaux"
-        elif orientation == "MV":
+        if orientation == "MV":
             orientation = "verticaux"
 
         if joueur not in (1, 2):
             QuoridorError.incorrect_p_number_assigned()
-
         if position in state["murs"][orientation]:
             QuoridorError.wall_already_here()
 
@@ -415,26 +425,31 @@ class Quoridor:
                     if i[0] == (position[0] + 1) or\
                         i[0] == (position[0] - 1):
                         QuoridorError.wall_already_here()
-
+                        
+        
         if orientation == "verticaux":
             for i in state['murs']['verticaux']:
                 if i[0] == position[0]:
                     if i[1] == (position[1] + 1) or\
-                        i[1] == (position[1] - 1):
+                        i[1] == (position[1] - 1) or\
+                        i[1] == position[1]:
                         QuoridorError.wall_already_here()
                         
-        #Error when placing overlapping horizontal and vertical walls
+                        
+        # Error when placing overlapping horizontal and vertical walls
         if orientation == "verticaux":
             for i in state['murs']['horizontaux']:
                 if i[0] == (position[0] - 1) and\
                     i[1] == (position[1] + 1):
                     QuoridorError.wall_already_here()
+                    
 
         if orientation == "horizontaux":
             for i in state['murs']['verticaux']:
                 if i[0] == (position[0] - 1) and\
                     i[1] == (position[1] + 1):
                     QuoridorError.wall_already_here()
+                    
 
         #Error 3(1) If the given position is outside the limitation of the board:
         x, y = position[0], position[1]
@@ -458,7 +473,7 @@ class Quoridor:
             state["murs"][orientation].remove(position)
             QuoridorError.incorrect_wall_orientation()
 
-        #Error if the player blocks the other player in
+        # Error if the player blocks the other player in
         if joueur == 1:
             if not nx.has_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2'):
                 state["murs"][orientation].remove(position)
@@ -524,13 +539,10 @@ class Quoridor:
         
         '''
 
-
-
-        '''
         shortest_p1 = nx.shortest_path(graphe, tuple(state["joueurs"][0]["pos"]), 'B1') 
         shortest_p2 = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
-        
-        if len(shortest_p1) < len(shortest_p2):
+
+        if len(shortest_p1) <= len(shortest_p2) or state['joueurs'][0]['murs'] == 0:
             next_step_p1 = shortest_p1[1]
             return("D", next_step_p1)
 
@@ -539,59 +551,99 @@ class Quoridor:
                 #TODO NEED TO ADD IF STATEMENTS HERE BEFORE 
                 # CHANGING THE VALUES IN STATE[MURS] TO PREVENT QUORIDORERRORS 
                 # THAT WOULD END THE CODE TOO EARLY
-                if x > 1 or x < 9 or y > 1 or y < 9:
+                if x >= 1 and x <= 9 and y >=1 and y <= 9:
                     try:
-                        if orientation == "MH":
-                            state['murs']['horizontaux'] += [[x, y]]
-                        elif orientation == "MV":
-                            state['murs']['verticaux'] += [[x, y]]
-                    except QuoridorError.incorrect_wall_number():
-                        pass
+                        self.placer_un_mur(1, (x, y), orientation)
+                    except:
+                        return
+                    # except QuoridorError.incorrect_wall_number:
+                    #     pass
 
-                    except QuoridorError.incorrect_wall_orientation():
-                        pass
+                    # except QuoridorError.incorrect_wall_orientation:
+                    #     pass 
 
-                    except QuoridorError.invalid_wall_placement():
-                        pass
+                    # except QuoridorError.invalid_wall_placement:
+                    #     pass
                     
-                    else:
-                        print("Errors avoided!")
+                    # except QuoridorError.wall_already_here:
+                    #     pass
+
+                    
 
 
             def remove_temp_wall(x, y, orientation):
                 #No if statements required here for error coverage; we only call the function after placing a temp wall
                 if orientation == "MH":
-                    state['murs']['horizontaux'].remove([x, y])
-                elif orientation == "MV":
-                    state['murs']['verticaux'].remove([x, y])
+                    if (x, y) in state['murs']['horizontaux']:
+                        state['murs']['horizontaux'].remove((x, y))
+                        state["joueurs"][joueur - 1]["murs"] += 1
+                if orientation == "MV":
+                    if (x,y) in state['murs']['verticaux']:
+                        state['murs']['verticaux'].remove((x, y))
+                        state["joueurs"][joueur - 1]["murs"] += 1
+                
 
             path_length = []
-            for i in range(len(shortest_p2) - 1): #The size of this list will change below; not sure if it will affect the loop
+            shortest_p2 = shortest_p2[:-1]
+            to_remove = []
+
+            for point in shortest_p2:
+                    if point in state['murs']['horizontaux'] or point in state['murs']['verticaux']:
+                        to_remove.append(point)
+
+            for removal in to_remove:
+                if removal in shortest_p2:
+                    shortest_p2.remove(removal)
+
+            for i in range(len(shortest_p2)): #The size of this list will change below; not sure if it will affect the loop
 
                 #could shorten with 
                 #for j in ["MH", "MV"]:
                     #temp_wall(x, y, j)
                     #path_length.append(j, ...)
                     #temp_wall_remove(x, y, j)
-
                 #Add a horizontal temp wall, determine the length of the P2 shortest path, remove it, repeat with vertical
-                temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MH")
-                path_length.append(("MH", (shortest_p2[i][0], shortest_p2[i][1]), len(shortest_p2)))
-                remove_temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MH")
-                temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MV")
-                path_length.append(("MV", (shortest_p2[i][0], shortest_p2[i][1]), len(shortest_p2)))
-                remove_temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MV")
+                #Check if the temp wall will be out of bounds
+                print(state['murs']['horizontaux'], [shortest_p2[i][0], shortest_p2[i][1]])
+                if shortest_p2[i][0] >= 1 and shortest_p2[i][0] < 9 and shortest_p2[i][1] <= 9 and shortest_p2[i][1] > 1:
+                    if [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['horizontaux'] or [shortest_p2[i][0] - 1, shortest_p2[i][1]] in state['murs']['horizontaux'] or [shortest_p2[i][0] + 1, shortest_p2[i][1]] in state['murs']['horizontaux']:
+                        pass
+                    elif [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['verticaux'] or [shortest_p2[i][0] + 1, shortest_p2[i][1]] in state['murs']['verticaux']:
+                        pass
+                    else:
+                        temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MH")
+                        new_shortest_p2 = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
+                        path_length.append(("MH", (shortest_p2[i][0], shortest_p2[i][1]), len(new_shortest_p2)))
+                        remove_temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MH")
+            
+            for i in range(len(shortest_p2)):
+                if shortest_p2[i][0] > 1 and shortest_p2[i][0] < 9 and shortest_p2[i][1] > 1 and shortest_p2[i][1] < 9:
+                    if [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['verticaux'] or [shortest_p2[i][0], shortest_p2[i][1] + 1] in state['murs']['verticaux'] or [shortest_p2[i][0], shortest_p2[i][1] - 1] in state['murs']['verticaux']:
+                        pass
+                    elif [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['horizontaux']  or [shortest_p2[i][0], shortest_p2[i][1] + 1] in state['murs']['horizontaux']: 
+                        pass
+                    else:
+                        temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MV")
+                        new_shortest_p2 = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
+                        path_length.append(("MV", (shortest_p2[i][0], shortest_p2[i][1]), len(new_shortest_p2)))
+                        remove_temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MV")
+
+            for i in range(len(shortest_p2)):
+                if shortest_p2[i][0] == 9 and shortest_p2[i][1] < 9 and shortest_p2[i][1] > 1:
+                    temp_wall(shortest_p2[i][0] - 1, shortest_p2[i][1], "MH")
+                    path_length.append(("MH", (shortest_p2[i][0] - 1, shortest_p2[i][1]), len(shortest_p2)))
+                    remove_temp_wall(shortest_p2[i][0] - 1, shortest_p2[i][1], "MH")
 
             #This line returns the element of the list that adds the largest number of steps for p2.
+            #If there is no good wall placement, it moves the player
             #If there are multiple options, it still only returns 1 which is fine
-            best_move = max(path_length, key=lambda x:x[2])
+            if path_length == []:
+                best_move = ("D", shortest_p1[1])
+            else:
+                best_move = max(path_length, key=lambda x:x[2])
 
             #This will return something like ("MH", (2, 2))
             return(best_move[0], (best_move[1][0], best_move[1][1]))
-
-
-
-
 
         # elif len(shortest_p1) > len(shortest_p2):
         #     wall_choice = Quoridor.placer_un_mur(state, 1, shortest_p2[1], "MH")
@@ -604,10 +656,10 @@ class Quoridor:
         #into several sub-variables, each of which takes a wall placement possibility, 
         #and then compare which of the wall_choice sub-variables seems to be the most efficient?
             
-            '''
+
         ################################################################################################################
         #Can uncomment the lines below here to make the simple version of the code work
-        next_step = nx.shortest_path(graphe, tuple(state["joueurs"][joueur - 1]["pos"]),\
-            'B' + str(joueur))
+       #next_step = nx.shortest_path(graphe, tuple(state["joueurs"][joueur - 1]["pos"]),\
+        #    'B' + str(joueur))
 
-        return ("D", next_step[1])
+        #return ("D", next_step[1])
