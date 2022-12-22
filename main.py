@@ -16,7 +16,7 @@ if __name__ == "__main__":
     args = analyser_commande()
 
     if args.automatique and args.graphique:
-        
+
         #Play auto against server with GUI
         turtle.screensize(canvwidth=400, canvheight=400, bg="gainsboro")
 
@@ -29,10 +29,7 @@ if __name__ == "__main__":
         game = QuoridorX(joueurs)
 
         while not game.est_terminée():
-            
-            # game.gui() #TODO THIS IS THE ONLY LINE THAT CHANGES FOR TURTLE GUI
-            #TODO Can't see the game as it is updating
-            #TODO Check if I can be player 2 against the server
+
             choice, position = game.jouer_le_coup(1) #Make manual decision
 
             id_partie, new_state = jouer_coup(
@@ -45,7 +42,7 @@ if __name__ == "__main__":
             
             game = QuoridorX(new_state['état']['joueurs'], new_state['état']['murs'])
 
-        
+
         print(f"Congrats to {game.est_terminée()} for your incredible victory")
         game.gui()
         turtle.exitonclick()
@@ -64,9 +61,8 @@ if __name__ == "__main__":
         game = QuoridorX(joueurs)
 
         while not game.est_terminée():
-            
-            game.gui() #TODO THIS IS THE ONLY LINE THAT CHANGES FOR TURTLE GUI
-            #TODO Check if I can be player 2 against the server
+
+            game.gui()
             choice, position = game.récupérer_le_coup(1) #Make manual decision
 
             id_partie, new_state = jouer_coup(
@@ -76,13 +72,13 @@ if __name__ == "__main__":
                 args.idul,
                 SECRET,
                 )
-            
+
             game = QuoridorX(new_state['état']['joueurs'], new_state['état']['murs'])
 
         print(f"Congrats to {game.est_terminée()} for your incredible victory")
         game.gui()
         ####################################################################
-        
+
 
     elif args.automatique:
         joueurs = []
@@ -95,7 +91,6 @@ if __name__ == "__main__":
 
         while not game.est_terminée():
             print(game)
-            #TODO Check if I can be player 2 against the server
             choice, position = Quoridor.jouer_le_coup(game, 1) #Auto play my move
             # choice, position = game.récupérer_le_coup(1)
 
@@ -126,7 +121,6 @@ if __name__ == "__main__":
 
         while not game.est_terminée():
             print(game)
-            #TODO Check if I can be player 2 against the server
             choice, position = game.récupérer_le_coup(1) #Make manual decision
 
             id_partie, new_state = jouer_coup(
@@ -136,10 +130,8 @@ if __name__ == "__main__":
                 args.idul,
                 SECRET,
              )
-            
+
             game = Quoridor(new_state['état']['joueurs'], new_state['état']['murs'] )
 
         print(game)
         print(f"Congrats to {game.est_terminée()} for your incredible victory")
-
-    

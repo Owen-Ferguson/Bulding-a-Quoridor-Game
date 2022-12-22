@@ -425,8 +425,8 @@ class Quoridor():
                     if i[0] == (position[0] + 1) or\
                         i[0] == (position[0] - 1):
                         QuoridorError.wall_already_here()
-                        
-        
+
+
         if orientation == "verticaux":
             for i in state['murs']['verticaux']:
                 if i[0] == position[0]:
@@ -434,22 +434,22 @@ class Quoridor():
                         i[1] == (position[1] - 1) or\
                         i[1] == position[1]:
                         QuoridorError.wall_already_here()
-                        
-                        
+
+
         # Error when placing overlapping horizontal and vertical walls
         if orientation == "verticaux":
             for i in state['murs']['horizontaux']:
                 if i[0] == (position[0] - 1) and\
                     i[1] == (position[1] + 1):
                     QuoridorError.wall_already_here()
-                    
+
 
         if orientation == "horizontaux":
             for i in state['murs']['verticaux']:
                 if i[0] == (position[0] - 1) and\
                     i[1] == (position[1] + 1):
                     QuoridorError.wall_already_here()
-                    
+
 
         #Error 3(1) If the given position is outside the limitation of the board:
         x, y = position[0], position[1]
@@ -525,7 +525,7 @@ class Quoridor():
         2a.       if our path is shorter, make a move in the shortest path
         2b.       if their path is shorter, place a wall
         3.        if wall, then place it in the way of their shortest path
-            For that, we can either test a bunch of placements, calculate the number of 
+            For that, we can either test a bunch of placements, calculate the number of
             steps it added for the opponent, and place the most effective wall,
 
             OR
@@ -535,11 +535,10 @@ class Quoridor():
 
             Option 1 will win us more games, but we won't do it if the processing time is too long
             This I'm not so sure of; will it take too long? We want less than ~5 seconds per turn.
-        
-        
+
         '''
 
-        shortest_p1 = nx.shortest_path(graphe, tuple(state["joueurs"][0]["pos"]), 'B1') 
+        shortest_p1 = nx.shortest_path(graphe, tuple(state["joueurs"][0]["pos"]), 'B1')
         shortest_p2 = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
 
         if len(shortest_p1) <= len(shortest_p2) or state['joueurs'][0]['murs'] == 0:
@@ -548,9 +547,6 @@ class Quoridor():
 
         else:
             def temp_wall(x, y, orientation):
-                #TODO NEED TO ADD IF STATEMENTS HERE BEFORE 
-                # CHANGING THE VALUES IN STATE[MURS] TO PREVENT QUORIDORERRORS 
-                # THAT WOULD END THE CODE TOO EARLY
                 if x >= 1 and x <= 9 and y >=1 and y <= 9:
                     try:
                         self.placer_un_mur(1, (x, y), orientation)
@@ -586,10 +582,14 @@ class Quoridor():
                 #Add a horizontal temp wall, determine the length of the P2 shortest path, remove it, repeat with vertical
                 #Check if the temp wall will be out of bounds
                 #print(state['murs']['horizontaux'], [shortest_p2[i][0], shortest_p2[i][1]])
-                if shortest_p2[i][0] >= 1 and shortest_p2[i][0] < 9 and shortest_p2[i][1] <= 9 and shortest_p2[i][1] > 1:
-                    if [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['horizontaux'] or [shortest_p2[i][0] - 1, shortest_p2[i][1]] in state['murs']['horizontaux'] or [shortest_p2[i][0] + 1, shortest_p2[i][1]] in state['murs']['horizontaux']:
+                if shortest_p2[i][0] >= 1 and shortest_p2[i][0] < 9 and shortest_p2[i][1] <= 9 and\
+                shortest_p2[i][1] > 1:
+                    if [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['horizontaux'] or\
+                        [shortest_p2[i][0] - 1, shortest_p2[i][1]] in state['murs']['horizontaux'] or\
+                        [shortest_p2[i][0] + 1, shortest_p2[i][1]] in state['murs']['horizontaux']:
                         pass
-                    elif [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['verticaux'] or [shortest_p2[i][0] + 1, shortest_p2[i][1]] in state['murs']['verticaux']:
+                    elif [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['verticaux'] or\
+                         [shortest_p2[i][0] + 1, shortest_p2[i][1]] in state['murs']['verticaux']:
                         pass
                     else:
                         temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MH")
@@ -599,9 +599,12 @@ class Quoridor():
             
             for i in range(len(shortest_p2)):
                 if shortest_p2[i][0] > 1 and shortest_p2[i][0] < 9 and shortest_p2[i][1] > 1 and shortest_p2[i][1] < 9:
-                    if [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['verticaux'] or [shortest_p2[i][0], shortest_p2[i][1] + 1] in state['murs']['verticaux'] or [shortest_p2[i][0], shortest_p2[i][1] - 1] in state['murs']['verticaux']:
+                    if [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['verticaux'] or\
+                    [shortest_p2[i][0], shortest_p2[i][1] + 1] in state['murs']['verticaux'] or\
+                    [shortest_p2[i][0], shortest_p2[i][1] - 1] in state['murs']['verticaux']:
                         pass
-                    elif [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['horizontaux']  or [shortest_p2[i][0], shortest_p2[i][1] + 1] in state['murs']['horizontaux']: 
+                    elif [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['horizontaux']\
+                    or [shortest_p2[i][0], shortest_p2[i][1] + 1] in state['murs']['horizontaux']:
                         pass
                     else:
                         temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MV")
