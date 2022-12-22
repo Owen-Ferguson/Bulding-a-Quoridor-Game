@@ -628,7 +628,7 @@ class Quoridor():
                             , len(new_shortest_p2)))
                         remove_temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MH")
 
-            #If P2 is on the 9th column, still better to place a wall, 
+            #If P2 is on the 9th column, still better to place a wall,
             #but it won't be on the direct path
 
             for i, y in enumerate(shortest_p2):
