@@ -7,6 +7,9 @@ import turtle
 from quoridor import Quoridor
 
 class QuoridorX(Quoridor):
+    """
+    words words words
+    """
     def __init__(self, joueurs, murs=None):
         super().__init__(joueurs, murs)
 
