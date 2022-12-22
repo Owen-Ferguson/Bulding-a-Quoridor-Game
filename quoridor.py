@@ -505,14 +505,13 @@ class Quoridor():
         Returns:
             Tuple[str, List[int, int]]: Un tuple composé du type et de la position du coup joué.
         """
+
         if joueur not in (1, 2):
             QuoridorError.incorrect_p_number_assigned()
 
-        # if self.est_terminée() is not False:
-        #     QuoridorError.end_of_the_game()
-
         state = self.état
 
+        #Build the board
         graphe = construire_graphe(
             [joueur['pos'] for joueur in state['joueurs']],
             state['murs']['horizontaux'],
@@ -524,37 +523,38 @@ class Quoridor():
         2a.       if our path is shorter, make a move in the shortest path
         2b.       if their path is shorter, place a wall
         3.        if wall, then place it in the way of their shortest path
-            For that, we can either test a bunch of placements, calculate the number of
-            steps it added for the opponent, and place the most effective wall,
-
-            OR
-
-            We can test a few walls in different orientations in an area around the other players
-            next move, and place the first wall that adds at least 2 steps to their shortest path
-
-            Option 1 will win us more games, but we won't do it if the processing time is too long
-            This I'm not so sure of; will it take too long? We want less than ~5 seconds per turn.
-
+            For that, we can either test a bunch of placements, calculate the number of 
+            steps it added for the opponent, and place the most effective wall
         '''
+
+        #Check the length of the path
 
         shortest_p1 = nx.shortest_path(graphe, tuple(state["joueurs"][0]["pos"]), 'B1')
         shortest_p2 = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
+
+        #If our path is shorter or we have no more walls left, move forward
 
         if len(shortest_p1) <= len(shortest_p2) or state['joueurs'][0]['murs'] == 0:
             next_step_p1 = shortest_p1[1]
             return("D", next_step_p1)
 
         else:
+
             def temp_wall(x, y, orientation):
+                """
+                Function to temporarily place a wall
+                """
                 if x >= 1 and x <= 9 and y >=1 and y <= 9:
                     try:
                         self.placer_un_mur(1, (x, y), orientation)
                     except:
                         return
 
+
             def remove_temp_wall(x, y, orientation):
-                #No if statements required here for error coverage;
-                #we only call the function after placing a temp wall
+                """
+                Function to take out the wall previously put
+                """
                 if orientation == "MH":
                     if (x, y) in state['murs']['horizontaux']:
                         state['murs']['horizontaux'].remove((x, y))
@@ -567,57 +567,63 @@ class Quoridor():
 
             path_length = []
             shortest_p2 = shortest_p2[:-1]
-            to_remove = []
 
-            for point in shortest_p2:
-                if point in state['murs']['horizontaux'] or point in state['murs']['verticaux']:
-                    to_remove.append(point)
+            #Check where on the path it would be best to put a wall
 
-            for removal in to_remove:
-                if removal in shortest_p2:
-                    shortest_p2.remove(removal)
+            #V wall check
 
-            for i in enumerate(shortest_p2):
-                #The size of this list will change below; not sure if it will affect the loop
-                #Add a horizontal temp wall, determine the length of the P2 shortest path,
-                #remove it, repeat with vertical
-                #Check if the temp wall will be out of bounds
-                #print(state['murs']['horizontaux'], [shortest_p2[i][0], shortest_p2[i][1]])
-                if shortest_p2[i][0] >= 1 and shortest_p2[i][0] < 9 and shortest_p2[i][1] <= 9 and\
-                shortest_p2[i][1] > 1:
-                    if [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['horizontaux'] or\
-                        [shortest_p2[i][0] - 1, shortest_p2[i][1]] in\
-                        state['murs']['horizontaux'] or\
-                        [shortest_p2[i][0] + 1, shortest_p2[i][1]] in\
-                        state['murs']['horizontaux']:
-                        pass
-                    elif [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['verticaux'] or\
-                         [shortest_p2[i][0] + 1, shortest_p2[i][1]] in state['murs']['verticaux']:
-                        pass
-                    else:
-                        temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MH")
-                        new_shortest_p2 = nx.shortest_path(graphe\
-                        , tuple(state["joueurs"][1]["pos"]), 'B2')
-                        path_length.append(("MH", (shortest_p2[i][0], shortest_p2[i][1])\
-                        , len(new_shortest_p2)))
-                        remove_temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MH")
-
-            for i in enumerate(shortest_p2):
-                if shortest_p2[i][0] > 1 and shortest_p2[i][0] < 9 and\
-                shortest_p2[i][1] > 1 and shortest_p2[i][1] < 9:
+            for i in range(len(shortest_p2)):
+                if shortest_p2[i][0] > 1 and shortest_p2[i][0] < 9 and shortest_p2[i][1] > 1 and\
+                    shortest_p2[i][1] < 9:
                     if [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['verticaux'] or\
-                    [shortest_p2[i][0], shortest_p2[i][1] + 1] in state['murs']['verticaux'] or\
-                    [shortest_p2[i][0], shortest_p2[i][1] - 1] in state['murs']['verticaux']:
-                        pass
-                    elif [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['horizontaux']\
-                    or [shortest_p2[i][0], shortest_p2[i][1] + 1] in state['murs']['horizontaux']:
-                        pass
+                        [shortest_p2[i][0], shortest_p2[i][1] + 1] in state['murs']['verticaux'] or\
+                        [shortest_p2[i][0] + 1, shortest_p2[i][1] + 1] in state['murs']['verticaux'] or\
+                        [shortest_p2[i][0] + 1, shortest_p2[i][1]] in state['murs']['verticaux']:
+                        continue
+                    elif [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['horizontaux'] or\
+                        [shortest_p2[i][0] + 1, shortest_p2[i][1]]\
+                        in state['murs']['horizontaux'] or\
+                        [shortest_p2[i][0] + 1, shortest_p2[i][1] + 1]\
+                        in state['murs']['horizontaux'] or\
+                        [shortest_p2[i][0], shortest_p2[i][1] + 1] in state['murs']['horizontaux']: 
+                        continue
                     else:
                         temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MV")
-                        new_shortest_p2 = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
+                        graphe_n = construire_graphe(
+                        [joueur['pos'] for joueur in state['joueurs']],
+                        state['murs']['horizontaux'],
+                        state['murs']['verticaux'])   
+                        new_shortest_p2 = nx.shortest_path(graphe_n, tuple(state["joueurs"][1]["pos"]), 'B2')
                         path_length.append(("MV", (shortest_p2[i][0], shortest_p2[i][1])\
-                        , len(new_shortest_p2)))
+                            , len(new_shortest_p2)))
                         remove_temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MV")
+
+            #H wall check
+
+            for i in range(len(shortest_p2)):
+
+                if shortest_p2[i][0] >= 1 and shortest_p2[i][0] < 9 and\
+                    shortest_p2[i][1] <= 9 and shortest_p2[i][1] > 1:
+                    if [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['horizontaux'] or\
+                        [shortest_p2[i][0] - 1, shortest_p2[i][1]] in state['murs']['horizontaux'] or\
+                        [shortest_p2[i][0] + 1, shortest_p2[i][1]] in state['murs']['horizontaux']:
+                        continue
+                    elif [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['verticaux'] or\
+                        [shortest_p2[i][0] + 1, shortest_p2[i][1]] in state['murs']['verticaux'] or\
+                        [shortest_p2[i][0] + 1, shortest_p2[i][1] - 1] in state['murs']['verticaux']:
+                        continue
+                    else:
+                        temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MH")
+                        graphe_n = construire_graphe(
+                        [joueur['pos'] for joueur in state['joueurs']],
+                        state['murs']['horizontaux'],
+                        state['murs']['verticaux'])
+                        new_shortest_p2 = nx.shortest_path(graphe_n, tuple(state["joueurs"][1]["pos"]), 'B2')
+                        path_length.append(("MH", (shortest_p2[i][0], shortest_p2[i][1])\
+                            , len(new_shortest_p2)))
+                        remove_temp_wall(shortest_p2[i][0], shortest_p2[i][1], "MH")
+
+            #If P2 is on the 9th column, still better to place a wall, but it won't be on the direct path
 
             for i in enumerate(shortest_p2):
                 if shortest_p2[i][0] == 9 and shortest_p2[i][1] < 9 and shortest_p2[i][1] > 1:
@@ -629,6 +635,7 @@ class Quoridor():
             #This line returns the element of the list that adds the largest number of steps for p2.
             #If there is no good wall placement, it moves the player
             #If there are multiple options, it still only returns 1 which is fine
+
             if path_length == []:
                 best_move = ("D", shortest_p1[1])
             else:
@@ -636,10 +643,3 @@ class Quoridor():
 
             #This will return something like ("MH", (2, 2))
             return(best_move[0], (best_move[1][0], best_move[1][1]))
-
-        ###################################################################################
-        #Can uncomment the lines below here to make the simple version of the code work
-       #next_step = nx.shortest_path(graphe, tuple(state["joueurs"][joueur - 1]["pos"]),\
-        #    'B' + str(joueur))
-
-        #return ("D", next_step[1])
