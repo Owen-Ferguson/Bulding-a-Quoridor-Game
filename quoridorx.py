@@ -31,7 +31,9 @@ class QuoridorX(Quoridor):
 
     #Create a filled square
     def square(self):
-        #Renders the whole board instantly rather than watching the turtle go
+        """
+        Renders the whole board instantly rather than watching the turtle go
+        """
         turtle.tracer(0, 0)
 
         self.t.color(self.line, self.fill)
@@ -43,6 +45,9 @@ class QuoridorX(Quoridor):
 
     #Move to any spot on the board without making marks
     def move(self, x, y):
+        """
+        Move to any spot on the board without making marks
+        """
         self.t.penup()
         self.t.setx(x)
         self.t.sety(y)
@@ -51,6 +56,9 @@ class QuoridorX(Quoridor):
 
     #Create a full row of squares for the empty board
     def row(self):
+        """
+        Create a full row of squares for the empty board
+        """
         for i in range(9):
                 self.move(self.coordx, self.coordy)
                 self.square()
@@ -58,6 +66,9 @@ class QuoridorX(Quoridor):
 
     #Add player 1 or 2 to the board
     def place_player(self, x, y, player):
+        """
+        Add player 1 or 2 to the board
+        """
         self.coordx = -325
         self.coordy = 250
 
@@ -69,7 +80,7 @@ class QuoridorX(Quoridor):
         if player == 2:
             if len(self.p2_movelist) > 0:
                 self.remove_player(self.p2_movelist[-1][0], self.p2_movelist[-1][1])
-        
+
         #Add the player to the new location
         self.move(self.coordx + 70*(x - 1) + 33, (self.coordy + 70*(y - 9) + 8))
         if player == 1:
@@ -81,9 +92,12 @@ class QuoridorX(Quoridor):
         self.t.begin_fill()
         self.t.circle(25)
         self.t.end_fill()
-    
+
     #Remove the player from the previous position; to be called when moving a player
     def remove_player(self, x, y):
+        """
+        Remove the player from the previous position; to be called when moving a player
+        """
         self.move(self.coordx + 70*(x - 1) + 33, (self.coordy + 70*(y - 9) + 8))
         self.t.color(self.fill, self.fill)
         #Drawing over the old position with the same colour as the board
@@ -93,6 +107,9 @@ class QuoridorX(Quoridor):
 
     #Create a filled rectangle for the walls
     def wall(self, x, y, orientation):
+        """
+        Create a filled rectangle for the walls
+        """
         #Change the wall dimensions + coords based on orientation
         if orientation == "MH":
             self.move(self.coordx + 70*(x - 1) + 3, self.coordy + 70*(y - 9) - 9)
@@ -124,12 +141,12 @@ class QuoridorX(Quoridor):
 
     def gui(self):
         state = self.état
-        
+
         self.create_empty_board()
         for i in range(2):
             self.place_player(state["joueurs"][i]["pos"][0]\
                 , state["joueurs"][i]["pos"][1], i + 1)
-        
+
         if len(state["murs"]["horizontaux"]) > 0:
             for i in state["murs"]["horizontaux"]:
                 self.wall(i[0], i[1], "MH")
