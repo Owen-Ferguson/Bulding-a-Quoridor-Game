@@ -8,7 +8,7 @@ from quoridor import Quoridor
 
 class QuoridorX(Quoridor):
     def __init__(self, joueurs, murs=None):
-        super().__init__(joueurs, murs)   
+        super().__init__(joueurs, murs)
 
         #Setting colour names for quick reference
         self.bg = "gainsboro"
@@ -60,9 +60,9 @@ class QuoridorX(Quoridor):
         Create a full row of squares for the empty board
         """
         for i in range(9):
-                self.move(self.coordx, self.coordy)
-                self.square()
-                self.coordx += 70
+            self.move(self.coordx, self.coordy)
+            self.square()
+            self.coordx += 70
 
     #Add player 1 or 2 to the board
     def place_player(self, x, y, player):
