@@ -556,19 +556,6 @@ class Quoridor():
                         self.placer_un_mur(1, (x, y), orientation)
                     except:
                         return
-                    # except QuoridorError.incorrect_wall_number:
-                    #     pass
-
-                    # except QuoridorError.incorrect_wall_orientation:
-                    #     pass 
-
-                    # except QuoridorError.invalid_wall_placement:
-                    #     pass
-                    
-                    # except QuoridorError.wall_already_here:
-                    #     pass
-
-                    
 
 
             def remove_temp_wall(x, y, orientation):
@@ -581,7 +568,7 @@ class Quoridor():
                     if (x,y) in state['murs']['verticaux']:
                         state['murs']['verticaux'].remove((x, y))
                         state["joueurs"][joueur - 1]["murs"] += 1
-                
+
 
             path_length = []
             shortest_p2 = shortest_p2[:-1]
@@ -596,15 +583,9 @@ class Quoridor():
                     shortest_p2.remove(removal)
 
             for i in range(len(shortest_p2)): #The size of this list will change below; not sure if it will affect the loop
-
-                #could shorten with 
-                #for j in ["MH", "MV"]:
-                    #temp_wall(x, y, j)
-                    #path_length.append(j, ...)
-                    #temp_wall_remove(x, y, j)
                 #Add a horizontal temp wall, determine the length of the P2 shortest path, remove it, repeat with vertical
                 #Check if the temp wall will be out of bounds
-                print(state['murs']['horizontaux'], [shortest_p2[i][0], shortest_p2[i][1]])
+                #print(state['murs']['horizontaux'], [shortest_p2[i][0], shortest_p2[i][1]])
                 if shortest_p2[i][0] >= 1 and shortest_p2[i][0] < 9 and shortest_p2[i][1] <= 9 and shortest_p2[i][1] > 1:
                     if [shortest_p2[i][0], shortest_p2[i][1]] in state['murs']['horizontaux'] or [shortest_p2[i][0] - 1, shortest_p2[i][1]] in state['murs']['horizontaux'] or [shortest_p2[i][0] + 1, shortest_p2[i][1]] in state['murs']['horizontaux']:
                         pass
@@ -644,18 +625,6 @@ class Quoridor():
 
             #This will return something like ("MH", (2, 2))
             return(best_move[0], (best_move[1][0], best_move[1][1]))
-
-        # elif len(shortest_p1) > len(shortest_p2):
-        #     wall_choice = Quoridor.placer_un_mur(state, 1, shortest_p2[1], "MH")
-        #     shortest_p2_modif = nx.shortest_path(graphe, tuple(state["joueurs"][1]["pos"]), 'B2')
-        #     if len(shortest_p2_modif) >= 2:
-        #         return wall_choice
-             
-        #I tried to do a simple version here with only 1 option inspired by what you wrote above, 
-        #but I was wondering if it would be better to divide the "wall_choice" variable 
-        #into several sub-variables, each of which takes a wall placement possibility, 
-        #and then compare which of the wall_choice sub-variables seems to be the most efficient?
-            
 
         ################################################################################################################
         #Can uncomment the lines below here to make the simple version of the code work
